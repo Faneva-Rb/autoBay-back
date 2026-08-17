@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -10,36 +11,61 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
+  name      String
+  firstName String? @map("first_name")
   email     String   @unique
-  name      String?
+  password  String 
+  role      Role @default(MECHANIC)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
 
   @@map("users")
 }
 
-
-model Post {
+model Customer {
   id Int @id @default(autoincrement())
-  title String
-  published Boolean @default(false)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  
-  comments Comment[]
-
-  @@map("posts")
-}
-
-model Comment {
-  id Int @id @default(autoincrement())
-  content String
+  name String 
+  firstName String? @map("first_name")
+  address String?
+  email String? @unique
+  phoneNumber String @map("phone")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  postId Int
-  post Post @relation(fields: [postId], references: [id])
+  vehicle Vehicle[]
 
-  @@map("comments")
+  @@map("customers")
 }
+
+model Vehicle {
+  id Int @id @default(autoincrement())
+  immatriculation String @unique
+  model String
+  year String
+  brand String
+  fuel_type Fuel
+  transmission Transmission
+
+  idCustomer Int
+  customer Customer @relation(fields: [idCustomer], references: [id])
+
+
+  @@map("vehicles")
+}
+
+enum Transmission {
+  MANUEL
+  AUTOMATIC
+}
+
+enum Fuel {
+  ESSENCE
+  DIESEL
+}
+enum Role {
+  MECHANIC
+  ADMIN
+  RECEPTIONIST
+  WORKSHOP_MANAGER
+}
+
