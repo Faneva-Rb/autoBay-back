@@ -9,19 +9,19 @@ export class AuthService {
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService
-    ){}
+    ) { }
 
-    async login(loginDto: LoginDto){
+    async login(loginDto: LoginDto) {
         const { email, password } = loginDto
 
         const user = await this.usersService.findEmail(email)
-        if(!user) {
+        if (!user) {
             throw new UnauthorizedException('Utilisateur introuvable')
         }
 
         const passwordValid = await bcrypt.compare(password, user.password)
 
-        if(!passwordValid) throw new UnauthorizedException('Mot de passe incorrecte')
+        if (!passwordValid) throw new UnauthorizedException('Mot de passe incorrecte')
 
         const payload = { sub: user.id, email: user.email, role: user.role }
 
@@ -29,7 +29,12 @@ export class AuthService {
 
         return {
             token,
-            user
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                firstName: user.firstName
+            }
         }
     }
 }

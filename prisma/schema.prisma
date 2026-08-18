@@ -19,6 +19,9 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  mechanic Mechanic?
+  receptionist Receptionist?
+
   @@map("users")
 }
 
@@ -51,6 +54,33 @@ model Vehicle {
 
 
   @@map("vehicles")
+} 
+
+model Mechanic {
+  id Int @id @default(autoincrement())
+  speciality String
+  salary String 
+  is_available Boolean @default(true)
+  phoneNumber String @map("phone")
+  hire_date DateTime 
+
+  idUser Int @unique
+  user User @relation(fields: [idUser], references: [id])
+
+  @@map("mechanics")
+}
+
+model Receptionist {
+  id Int @id @default(autoincrement())
+  salary String
+  hire_date DateTime
+  phoneNumber String @map("phone")
+  is_active Boolean @default(true)
+
+  idUser Int @unique
+  user User @relation(fields: [idUser], references: [id])
+
+  @@map("receptionists")
 }
 
 enum Transmission {
