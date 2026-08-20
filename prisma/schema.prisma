@@ -2,6 +2,7 @@ generator client {
   provider     = "prisma-client"
   output       = "../src/generated/prisma"
   moduleFormat = "cjs"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -62,7 +63,7 @@ model Mechanic {
   salary String 
   is_available Boolean @default(true)
   phoneNumber String @map("phone")
-  hire_date DateTime 
+  hire_date DateTime @db.Date
 
   idUser Int @unique
   user User @relation(fields: [idUser], references: [id])
@@ -73,7 +74,7 @@ model Mechanic {
 model Receptionist {
   id Int @id @default(autoincrement())
   salary String
-  hire_date DateTime
+  hire_date DateTime @db.Date
   phoneNumber String @map("phone")
   is_active Boolean @default(true)
 
@@ -83,8 +84,45 @@ model Receptionist {
   @@map("receptionists")
 }
 
+
+view ReceptionistView {
+  receptionist_id Int
+  user_id Int
+  name String
+  first_name String
+  email String
+  hire_date DateTime
+  salary String
+  is_active Boolean
+  created_at DateTime
+  updated_at DateTime
+
+
+  @@map("receptionist_view")
+}
+
+view MechanicView {
+  mechanic_id Int
+  user_id Int
+  name String
+  first_name String
+  email String
+  hire_date DateTime
+  salary String
+  speciality String
+  is_available Boolean
+  created_at DateTime
+  updated_at DateTime
+
+
+  @@map("mechanic_view")
+}
+
+
+
+
 enum Transmission {
-  MANUEL
+  MANUAL
   AUTOMATIC
 }
 

@@ -13,7 +13,7 @@ export class ReceptionistsService {
 
 
     async findAll(){
-        const receptionists = await this.prisma.receptionist.findMany()
+        const receptionists = await this.prisma.receptionistView.findMany()
 
         if(receptionists.length == 0) throw new NotFoundException("Aucun résulat trouvé")
 
@@ -21,9 +21,9 @@ export class ReceptionistsService {
     }
 
     async findOne(id: number){
-        return this.prisma.receptionist.findUnique({
+        return this.prisma.receptionistView.findFirst({
             where: {
-                id: id
+                receptionist_id: id
             }
         })
     }
@@ -43,7 +43,7 @@ export class ReceptionistsService {
         return this.prisma.receptionist.create({
             data: {
                 salary,
-                hire_date,
+                hire_date: new Date(hire_date),
                 phoneNumber,
                 is_active,
                 

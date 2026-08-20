@@ -14,11 +14,7 @@ export class MechanicsService {
     ) { }
 
     async findAll(){
-        const mechanics = await this.prisma.mechanic.findMany({
-            include: {
-                user: true,
-            }
-        })
+        const mechanics = await this.prisma.mechanicView.findMany()
 
         if(mechanics.length == 0) throw new NotFoundException("Aucun résultat trouvé")
 
@@ -26,10 +22,9 @@ export class MechanicsService {
     }
 
     async findOne(id: number){
-        return this.prisma.mechanic.findUnique({
-            where: { id },
-            include: {
-                user: true
+        return this.prisma.mechanicView.findFirst({
+            where: {
+                mechanic_id: id
             }
         })
     }
@@ -91,7 +86,7 @@ export class MechanicsService {
 
     async removeMechanic(id: number){
         await this.prisma.$transaction(async (tx) => {
-            const mechanic = await tx.receptionist.findUnique({
+            const mechanic = await tx.mechanic.findUnique({
                 where: {
                     id: id
                 }
