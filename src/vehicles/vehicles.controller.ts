@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { JwtAuthGuad } from 'src/auth/guards/jwt-auth.guard';
@@ -16,6 +16,11 @@ export class VehiclesController {
     @Get()
     findAll(){
         return this.vehiclesService.findAll()
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string){
+        return this.vehiclesService.findOne(+id)
     }
 
     @Post()

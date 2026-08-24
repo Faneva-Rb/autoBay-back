@@ -10,6 +10,9 @@ import { WorkshopManagerModule } from './workshop_manager/workshop_manager.modul
 import { ReceptionistsModule } from './receptionists/receptionists.module';
 import { CustomersModule } from './customers/customers.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
+import { AppointmentsModule } from './appointments/appointments.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 @Module({
   imports: [
@@ -23,9 +26,17 @@ import { VehiclesModule } from './vehicles/vehicles.module';
     WorkshopManagerModule,
     ReceptionistsModule,
     CustomersModule,
-    VehiclesModule
+    VehiclesModule,
+    AppointmentsModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor
+    }
+
+  ],
 })
 export class AppModule { }

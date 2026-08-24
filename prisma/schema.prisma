@@ -36,6 +36,7 @@ model Customer {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  appointments Appointment[]
   vehicle Vehicle[]
 
   @@map("customers")
@@ -53,6 +54,7 @@ model Vehicle {
   idCustomer Int
   customer Customer @relation(fields: [idCustomer], references: [id])
 
+  appointments Appointment[]
 
   @@map("vehicles")
 } 
@@ -68,6 +70,8 @@ model Mechanic {
   idUser Int @unique
   user User @relation(fields: [idUser], references: [id])
 
+  appointments Appointment[]
+
   @@map("mechanics")
 }
 
@@ -82,6 +86,39 @@ model Receptionist {
   user User @relation(fields: [idUser], references: [id])
 
   @@map("receptionists")
+}
+
+
+model Appointment {
+  id Int @id @default(autoincrement())
+  reference String @unique
+  type AppointmentType
+  date DateTime @db.Date
+  time String
+  description String?
+  status AppointmentStatus @default(PENDING)
+  reminderSentAt DateTime? @map("reminder_sent_at")
+  idCustomer Int
+  customer Customer @relation(fields: [idCustomer], references: [id])
+  idVehicle Int
+  vehicle Vehicle @relation(fields: [idVehicle], references: [id])
+  idMechanic Int?
+  mechanic Mechanic? @relation(fields: [idMechanic], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([date])
+  @@index([status])
+  @@index([idCustomer])
+  @@map("appointments")
+}
+
+model AppointmentCounter {
+  year        Int    @id
+  lastNumber  Int    @default(0)
+
+  @@map("appointment_counters")
 }
 
 
@@ -120,6 +157,27 @@ view MechanicView {
 
 
 
+enum AppointmentType {
+  ROUTINE_MAINTENANCE    // ENTRETIEN_COURANT
+  PERIODIC_SERVICE       // REVISION_PERIODIQUE
+  MECHANICAL_REPAIR      // REPARATION_MECANIQUE
+  DIAGNOSTIC             // DIAGNOSTIC
+  BODYWORK               // CARROSSERIE
+  TECHNICAL_INSPECTION   // CONTROLE_TECHNIQUE
+  TIRE_FITTING           // MONTAGE_PNEUS
+  OTHER                  // AUTRE
+}
+
+enum AppointmentStatus {
+  PENDING          // EN_ATTENTE
+  CONFIRMED        // CONFIRME
+  REMINDER_SENT    // RAPPEL_ENVOYE
+  CLIENT_PRESENT   // CLIENT_PRESENT
+  OR_CREATED       // OR_CREE
+  COMPLETED        // TERMINE
+  CANCELLED        // ANNULE
+  NO_SHOW          // NO_SHOW
+}
 
 enum Transmission {
   MANUAL

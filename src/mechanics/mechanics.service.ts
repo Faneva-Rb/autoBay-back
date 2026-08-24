@@ -46,7 +46,7 @@ export class MechanicsService {
                 salary,
                 speciality,
                 phoneNumber,
-                hire_date,
+                hire_date: new Date(createMechanicDto.hire_date),
                 is_available,
 
                 user: {

@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 
 async function bootstrap() {
@@ -13,6 +14,7 @@ async function bootstrap() {
     whitelist: true,
     transform: true,
   }));
+
 
 
   const config = new DocumentBuilder()
