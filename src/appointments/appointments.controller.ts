@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { CreateAppointmentDto } from './create-appointment.dto';
 import { AppointmentsService } from './appointments.service';
 import { JwtAuthGuad } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/generated/prisma/enums';
+import { CreateAppointmentDto } from './dto/create-appointment.dto';
 
 @Controller('appointments')
 @UseGuards(JwtAuthGuad, RolesGuard)
